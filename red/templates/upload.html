@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+<p>Please upload the matrices.</p>
+<form enctype="multipart/form-data" 
+      method="post"
+      action="{% url red.views.upload %}">
+{{ form.as_p }}
+<p><input type="submit" value="Submit" /></p>
+</form>
+
+
+{% endblock %}
