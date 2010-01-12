@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Function Choices{% endblock %}
+
+{% block content %}
+
+<p>Choose the Functions to Use.</p>
+
+<form method="post"
+      action="{% url red-display-functions id pd %}">
+{{ form.as_p }}
+<p><input type="submit" value="Submit" /></p>
+</form>
+
+{% endblock %}

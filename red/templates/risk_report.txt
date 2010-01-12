@@ -1,0 +1,22 @@
+**************************Risk Statement******************************
+
+Functions at High Risk
+----------------------
+
+Reduce Waiting waste fails due to miscom_vision at (3,5)
+
+Functions at Medium Risk
+----------------------
+
+Reduce Waiting waste fails due to sub_opt_process at (3,4)
+Reduce Waiting waste fails due to miscom_reqs at (5,1)
+
+Functions at Low Risk
+----------------------
+
+Meet Standard requirements fails due to miscom_vision at (1,2)
+Lead Teams fails due to miscom_vision at (3,2)
+Reduce Waiting waste fails due to sub_opt_pers at (3,2)
+Reduce Waiting waste fails due to miscom_plan at (4,1)
+Reduce Waiting waste fails due to measured_effort at (3,1)
+Reduce Waiting waste fails due to resources at (4,1)

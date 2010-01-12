@@ -8,6 +8,13 @@
 
 <body>
   <div class="title"><h1>Risk in Early Design</h1></div>
+  <div class="links">
+    <ul class="left">
+      <li><a href="{% url red-index %}">Home</a></li>
+      <li><a href="{% url red-display-all-matrices %}">Matrices</a></li>
+      <li><a href="{% url red-upload %}">Upload</a></li>
+    </ul>
+  </div>
   <div class="content">
   {% block content %}{% endblock %}
   </div>

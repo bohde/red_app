@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Product-Design Choices{% endblock %}
+
+{% block content %}
+<p>Choose your Product and Design Choices.</p>
+
+{% for short,name in choices %}
+<p><a href="{% url red-display-functions id short %}">{{ name }}</a></p>
+{% endfor %}
+
+{% endblock %}

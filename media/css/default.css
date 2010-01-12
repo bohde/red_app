@@ -11,14 +11,40 @@ body {
     height: 15%;
 }
 
+.links{
+    width: 604px;
+    margin-left: auto ;
+    margin-right: auto ;
+}
+
+.links .left {
+    margin: -14px 0 0 0;
+    padding: 0 0 0 0;
+}
+
+.links .left li {
+    display: inline;
+    border: 1px solid #719D00;
+    margin: 0 0 0 0;
+}
+
+.links .left a {
+    background-color: #D2F870;
+    color: #444444;
+    text-align: center;
+    font-size:1.1em;
+    padding: 0 4px 0 4px;
+    text-decoration:none;
+}
+
 .content{
     width: 600px;
     min-height: 500px;
     margin-left: auto ;
     margin-right: auto ;
     background-color: #FFFFFF;
-    border-style: solid;
-    border-color: #719D00;
+    border:2px solid #719D00;
+    
 }
 
 .content p {
@@ -49,4 +75,9 @@ ul.errorlist {
     font-size: 10px;
     margin: 0 0 3px;
     padding: 4px 5px;
+}
+
+.report {
+    border-bottom: 1px solid #444444;
+    width: 100%;
 }
