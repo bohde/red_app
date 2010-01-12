@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Available Matrices{% endblock %}
+
+{% block content %}
+<p>Please Select a Matrix.</p>
+
+{% for matrix in matrices %}
+<p><a href="{% url red-display-matrix matrix.id %}">{{ matrix.name }}</a></p>
+{% endfor %}
+
+{% endblock %}

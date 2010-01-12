@@ -18,7 +18,8 @@ def upload(request):
     return render_to_response('upload.html', {'form':form})
 
 def display_matrices(request):
-    return HttpResponse("I should display a list of matrices")
+    matrices = MatrixSet.objects.all()
+    return render_to_response('matrices.html', {'matrices':matrices})
 
 def display_matrix(request, id):
     return HttpResponse("I display a matrix stuff")
