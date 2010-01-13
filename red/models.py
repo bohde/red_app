@@ -3,6 +3,8 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.utils import simplejson as json
 from django import forms
 
+from matrix import Matrix, MatrixEncoder, as_matrix
+
 from rbco.msexcel import xls_to_excelerator_dict as xls
 from itertools import count, takewhile
 
@@ -13,6 +15,22 @@ class JSONField(models.TextField):
     # Used so to_python() is called
     __metaclass__ = models.SubfieldBase
 
+    def __init__(self, *args, **kwargs):
+        try:
+            self.object_hook=kwargs["object_hook"]
+            del kwargs["object_hook"]
+        except KeyError as e:
+            self.object_hook=None
+
+        try:
+            self.cls = kwargs["cls"]
+            del kwargs["cls"]
+        except KeyError as e:
+            self.cls = DjangoJSONEncoder
+
+        super(JSONField, self).__init__(*args, **kwargs)
+
+
     def to_python(self, value):
         """Convert our string value to JSON after we load it from the DB"""
 
@@ -21,8 +39,8 @@ class JSONField(models.TextField):
 
         try:
             if isinstance(value, basestring):
-                return json.loads(value)
-        except ValueError:
+                return json.loads(value, object_hook=self.object_hook) if self.object_hook else json.loads(value)
+        except ValueError as e:
             pass
 
         return value
@@ -33,17 +51,19 @@ class JSONField(models.TextField):
         if value == "":
             return None
 
-        if isinstance(value, dict):
-            value = json.dumps(value, cls=DjangoJSONEncoder)
-
+        try:
+            value = json.dumps(value, cls=self.cls)
+        except:
+            pass
         return super(JSONField, self).get_db_prep_save(value)
+
 
 
 class MatrixSet(models.Model):
     name = models.CharField(max_length=250)
-    ec_matrix = JSONField("EC Matrix")
-    cf_matrix = JSONField("CF Matrix")
-    cfp_matrix = JSONField("CFP Matrix")
+    ec_matrix = JSONField("EC Matrix", cls=MatrixEncoder, object_hook=as_matrix)
+    cf_matrix = JSONField("CF Matrix", cls=MatrixEncoder, object_hook=as_matrix)
+    cfp_matrix = JSONField("CFP Matrix", cls=MatrixEncoder, object_hook=as_matrix)
 
     @staticmethod
     def process_excel_file(filename):
@@ -61,9 +81,8 @@ class MatrixSet(models.Model):
         def check(r,c):
             return 0 < r <= height and 0 < c <= width
 
-        matrix = [(k,v) for k,v in parsed.iteritems() if check(*k)]
-        return {"cols": cols, "rows":rows, "matrix":matrix, "width":width, "height":height}
-
+        matrix = dict((k,v) for k,v in parsed.iteritems() if check(*k))
+        return Matrix(cols=cols, rows=rows, matrix=matrix, width=width, height=height)
 
 class MatrixUploadFileForm(forms.ModelForm):
     class Meta:
@@ -94,7 +113,7 @@ class MatrixUploadFileForm(forms.ModelForm):
         if any(self.errors):
             return
         def check_dims(m1, d1, m2, d2):
-            if self.cleaned_data.get(m1,'')[d1] != self.cleaned_data.get(m2, '')[d2]:
+            if self.cleaned_data.get(m1,'').__dict__[d1] != self.cleaned_data.get(m2, '').__dict__[d2]:
                 raise forms.ValidationError(("%s of %s is not equal to %s of %s." % (d1, m1, d2, m2)).title())
         check_dims("ec_matrix", "width", "cf_matrix", "height")
         check_dims("cf_matrix", "width", "cfp_matrix", "width")
@@ -108,7 +127,7 @@ class MatrixUploadFileForm(forms.ModelForm):
 
 def matrix_select_from_model(pk):
     matrix = MatrixSet.objects.get(pk=pk)
-    func_choices = list(enumerate(matrix.ec_matrix['rows']))
+    func_choices = list(enumerate(matrix.ec_matrix.rows))
 
     class MatrixSelectFunctionsForm(forms.Form):
         choices = forms.MultipleChoiceField(choices=func_choices)
