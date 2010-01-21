@@ -31,16 +31,16 @@ class TestMatrixConversions(TestCase):
         self.assertEquals(json.loads(j, object_hook=as_matrix).__dict__, self.matrix.__dict__)
 
 
+def lol_to_dict(m):
+    d = {}
+    for y, j in enumerate(m):
+        for x, i in enumerate(j):
+            if i:
+                d[(x,y)] = i
+    return d
+    
 class TestMatrixMath(TestCase):
     def setUp(self):
-        def lol_to_dict(m):
-            d = {}
-            for y, j in enumerate(m):
-                for x, i in enumerate(j):
-                    if i:
-                        d[(x,y)] = i
-            return d
-    
         self.am = [[0, -1, 2],[4, 11, 2]]
         self.a = Matrix(["a", "b", "c"], ["foo", "bar"], lol_to_dict(self.am))
 
@@ -51,6 +51,16 @@ class TestMatrixMath(TestCase):
         self.c = Matrix(["baz", "batz"], ["foo", "bar"], lol_to_dict(self.cm))
 
     
-
     def testMatrixMult(self):
         self.assertEquals(self.a.mult(self.b).__dict__, self.c.__dict__)
+
+    def testMatrixMax(self):
+        self.assertEquals(self.a.max, 11)
+        self.assertEquals(self.b.max, 6)
+        self.assertEquals(self.c.max, 35)
+
+    def testMatrixL1(self):
+        cml1 = [[1,0], [5,2]]
+        self.assertEquals(self.c.l1().matrix, lol_to_dict(cml1))
+
+    

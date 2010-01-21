@@ -1,5 +1,5 @@
 import numpy
-from scipy import sparse, int8
+from scipy import sparse, int8, linalg
 from rbco.msexcel import xls_to_excelerator_dict as xls
 from itertools import count, takewhile
 from django.utils import simplejson as json
@@ -23,6 +23,7 @@ class Matrix(object):
         self.rows = rows
         self.height = height if height else len(rows)
         self.matrix = matrix
+        self._max = None
 
     def to_sparse_matrix(self):
         """
@@ -43,6 +44,27 @@ class Matrix(object):
         b = other.to_sparse_matrix()
         matrix = Matrix.from_sparse_matrix(a * b)
         return Matrix(cols, rows, matrix, width, height)
+
+    def get_max(self):
+        if not(self._max):
+            self._max = max(self.to_sparse_matrix().todok().itervalues())
+        return self._max
+    max = property(get_max)
+
+    def c1(self):
+        pass
+
+    def c2(self):
+        pass
+
+    def l1(self):
+        func = lambda i: int(5.0 * i / self.max)
+        matrix = ((k,func(v)) for k,v in self.matrix.iteritems())
+        return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
+                      height=self.height, width=self.width)
+
+    def l2(self):
+        pass
 
     @staticmethod
     def from_sparse_matrix(sp):
@@ -70,11 +92,12 @@ class Matrix(object):
         matrix = dict(((y-1, x-1),v) for (x,y),v in parsed.iteritems() if check(x,y) and v != 0 )
         return Matrix(cols=cols, rows=rows, matrix=matrix, width=width, height=height)
 
+    
+
 
 
 class MatrixEncoder(DjangoJSONEncoder):
     def default(self, obj):
-        print type(obj)
         if isinstance(obj, Matrix):
             return {"__matrix__": True,
                     "cols": obj.cols,
