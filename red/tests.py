@@ -29,3 +29,28 @@ class TestMatrixConversions(TestCase):
     def test_json_to_matrix(self):
         j = json.dumps(self.matrix, cls=MatrixEncoder)
         self.assertEquals(json.loads(j, object_hook=as_matrix).__dict__, self.matrix.__dict__)
+
+
+class TestMatrixMath(TestCase):
+    def setUp(self):
+        def lol_to_dict(m):
+            d = {}
+            for y, j in enumerate(m):
+                for x, i in enumerate(j):
+                    if i:
+                        d[(x,y)] = i
+            return d
+    
+        self.am = [[0, -1, 2],[4, 11, 2]]
+        self.a = Matrix(["a", "b", "c"], ["foo", "bar"], lol_to_dict(self.am))
+
+        self.bm = [[3,-1],[1,2],[6,1]]
+        self.b = Matrix(["baz", "batz"], ["l", "o", "l"], lol_to_dict(self.bm))
+    
+        self.cm = [[11,0],[35,20]]
+        self.c = Matrix(["baz", "batz"], ["foo", "bar"], lol_to_dict(self.cm))
+
+    
+
+    def testMatrixMult(self):
+        self.assertEquals(self.a.mult(self.b).__dict__, self.c.__dict__)
