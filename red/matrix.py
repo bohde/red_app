@@ -33,21 +33,21 @@ class Matrix(object):
         for (x,y),v in self.matrix.iteritems():
             # Have to reverse coords, because scipy puts them in (y,x) format
             d[y,x] = v
-        return d.tocsc()
+        return d
 
     def mult(self, other):
         rows = self.rows
         height = self.height
         cols = other.cols
         width = other.width
-        a = self.to_sparse_matrix()
-        b = other.to_sparse_matrix()
+        a = self.to_sparse_matrix().tocsc()
+        b = other.to_sparse_matrix().tocsc()
         matrix = Matrix.from_sparse_matrix(a * b)
         return Matrix(cols, rows, matrix, width, height)
 
     def get_max(self):
         if not(self._max):
-            self._max = max(self.to_sparse_matrix().todok().itervalues())
+            self._max = max(self.to_sparse_matrix().itervalues())
         return self._max
     max = property(get_max)
 
