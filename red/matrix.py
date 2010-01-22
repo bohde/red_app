@@ -77,8 +77,11 @@ class Matrix(object):
         return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
                       height=self.height, width=self.width)
 
-    def l2(self):
-        pass
+    def l2(self, agg):
+        func = lambda k,v: int(round(5.0 * v / max([agg[k,v], v])))
+        matrix = ((k,fun(k,v)) for k,v in self.matrix.iteritems())
+        return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
+                      height=self.height, width=self.width)
 
     @staticmethod
     def from_sparse_matrix(sp):

@@ -54,6 +54,7 @@ class TestMatrixMath(TestCase):
     def testMatrixMult(self):
         self.assertEquals(self.a.mult(self.b).__dict__, self.c.__dict__)
 
+
     def testMatrixMax(self):
         self.assertEquals(self.a.max, 11)
         self.assertEquals(self.b.max, 6)
@@ -66,7 +67,11 @@ class TestMatrixMath(TestCase):
         self.assertEquals(self.c.l1().matrix, lol_to_dict(l1_answer))
 
     def testMatrixC1(self):
-        c1_test = [[1,2],[5,0]]
         c1_answer = [[5,2],[1,2]]
-        self.c.matrix = lol_to_dict(c1_test)
-        self.assertEquals(self.c.c1(self.c).matrix, lol_to_dict(c1_answer))
+
+        ec_test = [[1,1],[1,0]]
+        self.a = Matrix(["baz", "batz"], ["foo", "bar"], lol_to_dict(ec_test))
+
+        cfp_test = [[1,2],[5,0]]
+        self.c.matrix = lol_to_dict(cfp_test)
+        self.assertEquals(self.a.c1(self.c).matrix, lol_to_dict(c1_answer))
