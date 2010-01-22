@@ -58,11 +58,11 @@ class Matrix(object):
         height = self.height
         cols = other.cols
         width = other.width
-        a = self.to_sparse_matrix()
-        b = other.to_sparse_matrix()
+        a = self.to_sparse_matrix().tolil()
+        b = other.to_sparse_matrix().T.tolil()
         for i,j in product(xrange(height), xrange(width)):
             r = a.getrow(i).toarray().tolist()[0]
-            c = b.getcol(j).T.toarray().tolist()[0]
+            c = b.getrow(j).toarray().tolist()[0]
             m =  max(imap(mul, r, c))
             ret[i,j] = m
         matrix = Matrix.from_sparse_matrix(ret)
