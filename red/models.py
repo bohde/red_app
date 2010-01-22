@@ -69,16 +69,35 @@ class MatrixSet(models.Model):
     def get_c1_matrix(self):
         if not(self.c1_matrix):
             self.c1_matrix = self.ec_matrix.c1(self.cfp_matrix)
+            self.save()
         return self.c1_matrix
+
+    def get_c2_matrix(self):
+        pass
 
     def get_l1_matrix(self):
         if not(self.l1_matrix):
             self.l1_matrix = self.ef_matrix.l1()
+            self.save()
         return self.l1_matrix
 
-    def run_report(self, functions):
+    def get_l2_matrix(self):
+        pass
+
+    def run_fever_chart(self, pd, functions):
+        pds = {"hss": lambda: (self.get_c1_matrix(), self.get_l1_matrix()),
+               "hs": lambda: (self.get_c1_matrix(), self.get_l2_matrix()),
+               "uss": lambda: (self.get_c2_matrix(), self.get_l1_matrix()),
+               "us": lambda: (self.get_c2_matrix(), self.get_l2_matrix())}
+        return Matrix.run_fever_chart(self.get_c1_matrix(), self.get_l1_matrix(), functions)
+
+    def run_report(self, pd, functions):
+        pds = {"hss": lambda: (self.get_c1_matrix(), self.get_l1_matrix()),
+               "hs": lambda: (self.get_c1_matrix(), self.get_l2_matrix()),
+               "uss": lambda: (self.get_c2_matrix(), self.get_l1_matrix()),
+               "us": lambda: (self.get_c2_matrix(), self.get_l2_matrix())}
         return Matrix.run_report(self.get_c1_matrix(), self.get_l1_matrix(), functions)
-    
+
 class MatrixUploadFileForm(forms.ModelForm):
     class Meta:
         model = MatrixSet

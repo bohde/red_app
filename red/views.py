@@ -57,10 +57,30 @@ def run_fever_report(request, id, pd):
     """
     ms = MatrixSet.objects.get(pk=id)
     f = request.session.get('functions', [])
-    rep = ms.run_report(f)
+    rep = ms.run_fever_chart(pd, f)
     # put the 5x5 matrices in (val, severity) format
     vals = (zip(*f) for f in zip(rep, severities))
     return render_to_response("fever_chart.html", {"id":id, "pd":pd, "report":vals})
 
 def run_text_report(request, id, pd):
-    return render_to_response("risk_report.txt", locals(), mimetype="text/plaintext")
+    """
+    hss - c1, l1
+    hs - c1, l2
+    uss - c2, l1
+    us - c2,l2
+    """
+    ms = MatrixSet.objects.get(pk=id)
+    f = request.session.get('functions', [])
+    rep = ms.run_report(pd, f)
+    # put the 5x5 matrices in (val, severity) format
+    mat = ms.ef_matrix
+    ret = {"high":[],
+           "med":[],
+           "low":[]}
+    for i,x in enumerate(rep):
+        for j,y in enumerate(x):
+            for xi, yi in y:
+                ret[severities[i][j]].append({"cf_value":(j+1, 5 - i),
+                                              "failure":mat.cols[yi],
+                                              "function":mat.rows[xi]})
+    return render_to_response("risk_report.txt", ret, mimetype="text/plaintext")

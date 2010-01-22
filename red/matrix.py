@@ -85,7 +85,7 @@ class Matrix(object):
                       height=self.height, width=self.width)
 
     @staticmethod
-    def run_report(c, l, functions):
+    def run_fever_chart(c, l, functions):
         ret = [[0 for y in xrange(5)] for x in xrange(5)]
         cm = c.to_sparse_matrix()
         lm = l.to_sparse_matrix()
@@ -94,6 +94,18 @@ class Matrix(object):
                 y = lm.get(k)
                 if y:
                     ret[5 - int(y)][int(x-1)] += 1
+        return ret
+
+    @staticmethod
+    def run_report(c, l, functions):
+        ret = [[[] for y in xrange(5)] for x in xrange(5)]
+        cm = c.to_sparse_matrix()
+        lm = l.to_sparse_matrix()
+        for k,x in cm.iteritems():
+            if x:
+                y = lm.get(k)
+                if y:
+                    ret[5 - int(y)][int(x-1)].append(k)
         return ret
     
     @staticmethod
