@@ -60,7 +60,13 @@ class TestMatrixMath(TestCase):
         self.assertEquals(self.c.max, 35)
 
     def testMatrixL1(self):
-        cml1 = [[1,0], [5,2]]
-        self.assertEquals(self.c.l1().matrix, lol_to_dict(cml1))
+        l1_test = [[1,3],[0,3]]
+        l1_answer = [[2,5],[0,5]]
+        self.c.matrix = lol_to_dict(l1_test)
+        self.assertEquals(self.c.l1().matrix, lol_to_dict(l1_answer))
 
-    
+    def testMatrixC1(self):
+        c1_test = [[1,2],[5,0]]
+        c1_answer = [[5,2],[1,2]]
+        self.c.matrix = lol_to_dict(c1_test)
+        self.assertEquals(self.c.c1(self.c).matrix, lol_to_dict(c1_answer))

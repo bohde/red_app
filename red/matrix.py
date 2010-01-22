@@ -1,7 +1,8 @@
 import numpy
 from scipy import sparse, int8, linalg
 from rbco.msexcel import xls_to_excelerator_dict as xls
-from itertools import count, takewhile
+from itertools import count, takewhile, product, imap
+from operator import mul
 from django.utils import simplejson as json
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -51,14 +52,27 @@ class Matrix(object):
         return self._max
     max = property(get_max)
 
-    def c1(self):
-        pass
+    def c1(self, other):
+        ret = sparse.dok_matrix((self.height, other.width))
+        rows = self.rows
+        height = self.height
+        cols = other.cols
+        width = other.width
+        a = self.to_sparse_matrix()
+        b = other.to_sparse_matrix()
+        for i,j in product(xrange(height), xrange(width)):
+            r = a.getrow(i).toarray().tolist()[0]
+            c = b.getcol(j).T.toarray().tolist()[0]
+            m =  max(imap(mul, r, c))
+            ret[i,j] = m
+        matrix = Matrix.from_sparse_matrix(ret)
+        return Matrix(cols, rows, matrix, width, height)
 
     def c2(self):
         pass
 
     def l1(self):
-        func = lambda i: int(5.0 * i / self.max)
+        func = lambda i: int(round(5.0 * i / self.max))
         matrix = ((k,func(v)) for k,v in self.matrix.iteritems())
         return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
                       height=self.height, width=self.width)
