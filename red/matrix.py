@@ -92,7 +92,8 @@ class Matrix(object):
         for k,x in cm.iteritems():
             if x:
                 y = lm.get(k)
-                ret[5 - int(y)][int(x-1)] += 1
+                if y:
+                    ret[5 - int(y)][int(x-1)] += 1
         return ret
     
     @staticmethod
