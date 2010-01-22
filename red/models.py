@@ -104,7 +104,7 @@ class MatrixUploadFileForm(forms.ModelForm):
         fields = ('name',)
         
     ec_matrix = forms.FileField(label="EC Matrix")
-    cf_matrix = forms.FileField(label="CF Matrix")
+    cf_matrix = forms.FileField(label="CF Matrix", required=False)
     cfp_matrix = forms.FileField(label="CF' Matrix")
     ef_matrix = forms.FileField(label="EF Matrix", required=False)
 
@@ -140,9 +140,16 @@ class MatrixUploadFileForm(forms.ModelForm):
                 raise forms.ValidationError(("%s of %s is not equal to %s of %s." %
                                               (d1, m1, d2, m2)).title())
 
-        check_dims("ec_matrix", "width", "cf_matrix", "height")
-        check_dims("cf_matrix", "width", "cfp_matrix", "width")
-        check_dims("cf_matrix", "height", "cfp_matrix", "height")
+        if not(self.cleaned_data.get('cf_matrix')):
+            """
+            We better have the ef_matrix
+            """
+            if not(self.cleaned_data.get('ef_matrix')):
+                raise forms.ValidationError("Need one of either CF Matrix or EF Matrix")
+        else:
+            check_dims("ec_matrix", "width", "cf_matrix", "height")
+            check_dims("cf_matrix", "width", "cfp_matrix", "width")
+            check_dims("cf_matrix", "height", "cfp_matrix", "height")
                 
         if not(self.cleaned_data.get('ef_matrix')):
             """
