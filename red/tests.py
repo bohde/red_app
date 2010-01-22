@@ -60,18 +60,35 @@ class TestMatrixMath(TestCase):
         self.assertEquals(self.b.max, 6)
         self.assertEquals(self.c.max, 35)
 
-    def testMatrixL1(self):
-        l1_test = [[1,3],[0,3]]
-        l1_answer = [[2,5],[0,5]]
-        self.c.matrix = lol_to_dict(l1_test)
-        self.assertEquals(self.c.l1().matrix, lol_to_dict(l1_answer))
+class TestREDMath(TestCase):
+    def setUp(self):
+        self.ecm = [[1, 1],[1, 0]]
+        self.ec = Matrix(["Bearing", "Belt"], ["Import Mechanical", "Export Mechanical"]
+                         , lol_to_dict(self.ecm))
 
+        self.cfm = [[0,3],[1,0]]
+        self.cf = Matrix(["Creep", "Fatigue"], ["Bearing", "Belt"], lol_to_dict(self.cfm))
+
+        self.cfpm = [[1,2],[5,0]]
+        self.cfp = Matrix(["Creep", "Fatigue"], ["Bearing", "Belt"], lol_to_dict(self.cfpm))
+
+        self.efm = [[1,3],[0,3]]
+        self.ef = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
+                         lol_to_dict(self.efm))
+
+        self.l1m = [[2,5],[0,5]]
+        self.l1 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
+                          lol_to_dict(self.l1m))
+
+        self.c1m = [[5,2],[1,2]]
+        self.c1 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
+                          lol_to_dict(self.c1m))
+
+    def testMatrixMath(self):
+        self.assertEquals(self.ec.mult(self.cf).matrix, self.ef.matrix)
+    
     def testMatrixC1(self):
-        c1_answer = [[5,2],[1,2]]
+        self.assertEquals(self.ec.c1(self.cfp).matrix, lol_to_dict(self.c1m))
 
-        ec_test = [[1,1],[1,0]]
-        self.a = Matrix(["baz", "batz"], ["foo", "bar"], lol_to_dict(ec_test))
-
-        cfp_test = [[1,2],[5,0]]
-        self.c.matrix = lol_to_dict(cfp_test)
-        self.assertEquals(self.a.c1(self.c).matrix, lol_to_dict(c1_answer))
+    def testMatrixL1(self):
+        self.assertEquals(self.ef.l1().matrix, self.l1.matrix)
