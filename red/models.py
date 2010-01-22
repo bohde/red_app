@@ -62,6 +62,22 @@ class MatrixSet(models.Model):
     cf_matrix = JSONField("CF Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     cfp_matrix = JSONField("CFP Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     ef_matrix = JSONField("EF Matrix", cls=MatrixEncoder, object_hook=as_matrix)
+    c1_matrix = JSONField("C1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
+    l1_matrix = JSONField("L1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
+
+
+    def get_c1_matrix(self):
+        if not(self.c1_matrix):
+            self.c1_matrix = self.ec_matrix.c1(self.cfp_matrix)
+        return self.c1_matrix
+
+    def get_l1_matrix(self):
+        if not(self.l1_matrix):
+            self.l1_matrix = self.ef_matrix.l1()
+        return self.l1_matrix
+
+    def run_report(self, functions):
+        return Matrix.run_report(self.get_c1_matrix(), self.get_l1_matrix(), functions)
     
 class MatrixUploadFileForm(forms.ModelForm):
     class Meta:
@@ -73,6 +89,7 @@ class MatrixUploadFileForm(forms.ModelForm):
     cfp_matrix = forms.FileField(label="CF' Matrix")
     ef_matrix = forms.FileField(label="EF Matrix", required=False)
 
+    
     def matrix_clean(self, matrix):
         cl = self.cleaned_data.get(matrix)
         if cl:

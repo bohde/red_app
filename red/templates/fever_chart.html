@@ -3,8 +3,21 @@
 {% block title %}Fever Chart{% endblock %}
 
 {% block content %}
-
-<p>There should be a report here.</p>
+<div class="report">
+<table>
+<tr>
+  <td class="side" rowspan=6><b>Likelihood</b></td>
+  <th colspan=5>Consequence</th>
+</tr>
+{% for row in report %}
+<tr>
+{% for el, severity in row %}
+<td class="{{ severity }}"> {{ el }} </td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+</div>
 
 <p><a href="{% url red-text-report id pd %}">Download Text Report</a></p>
 {% endblock %}

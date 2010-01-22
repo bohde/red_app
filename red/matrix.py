@@ -5,6 +5,7 @@ from itertools import count, takewhile, product, imap
 from operator import mul
 from django.utils import simplejson as json
 from django.core.serializers.json import DjangoJSONEncoder
+from collections import defaultdict
 
 import re
 def titlecase(s):
@@ -83,6 +84,17 @@ class Matrix(object):
         return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
                       height=self.height, width=self.width)
 
+    @staticmethod
+    def run_report(c, l, functions):
+        ret = [[0 for y in xrange(5)] for x in xrange(5)]
+        cm = c.to_sparse_matrix()
+        lm = l.to_sparse_matrix()
+        for k,x in cm.iteritems():
+            if x:
+                y = lm.get(k)
+                ret[5 - int(y)][int(x-1)] += 1
+        return ret
+    
     @staticmethod
     def from_sparse_matrix(sp):
         """

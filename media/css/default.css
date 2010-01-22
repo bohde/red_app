@@ -76,8 +76,31 @@ ul.errorlist {
     margin: 0 0 3px;
     padding: 4px 5px;
 }
-
 .report {
-    border-bottom: 1px solid #444444;
     width: 100%;
+    padding: 0;
+}
+.report .side{
+    margin: 0;
+    text-align:right;
+    width: 0;
+}
+.report table{
+    margin-top: 50px;
+    width: 75%;
+    text-align: center;
+    margin-left: auto ;
+    margin-right: auto ;
+    left: -12.5%;
+    color: #444444;
+}
+
+.report .low {
+     background-color: #D2F870;
+}
+.report .med {
+     background-color: #FFFD87;
+}
+.report .high {
+     background-color: #F70542;
 }

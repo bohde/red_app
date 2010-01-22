@@ -5,6 +5,12 @@ from django import forms
 
 from models import MatrixUploadFileForm, MatrixSet, matrix_select_from_model
 
+severities = [["low", "med"] + ["high"] * 3,
+              ["low"] + ["med"] * 2 + ["high"] * 2,
+              ["low"] + ["med"] * 3 + ["high"],
+              ["low"] * 3 + ["med"] * 2,
+              ["low"] * 4 + ["med"]]
+
 def index(request):
     return render_to_response('index.html')
 
@@ -21,7 +27,6 @@ def upload(request):
 def display_matrices(request):
     matrices = MatrixSet.objects.all()
     return render_to_response('matrices.html', {'matrices':matrices})
-
 
 pd_choices = (
     ("hs", "Human Centric, System Level"),
@@ -44,8 +49,18 @@ def display_matrix_functions(request, id, pd):
 
 
 def run_fever_report(request, id, pd):
-    print request.session.get('functions', [])
-    return render_to_response("fever_chart.html", locals())
+    """
+    hss - c1, l1
+    hs - c1, l2
+    uss - c2, l1
+    us - c2,l2
+    """
+    ms = MatrixSet.objects.get(pk=id)
+    f = request.session.get('functions', [])
+    rep = ms.run_report(f)
+    # put the 5x5 matrices in (val, severity) format
+    vals = (zip(*f) for f in zip(rep, severities))
+    return render_to_response("fever_chart.html", {"id":id, "pd":pd, "report":vals})
 
 def run_text_report(request, id, pd):
     return render_to_response("risk_report.txt", locals(), mimetype="text/plaintext")
