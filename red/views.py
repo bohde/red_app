@@ -41,7 +41,8 @@ def display_matrix_functions(request, id, pd):
     if request.method == 'POST':
         form = matrix_select_from_model(id)(request.POST)
         if form.is_valid():
-            request.session['functions'] = [int(x) for x in  form.cleaned_data['choices']]
+            request.session['functions'] = {"id":id,
+                                            "vals":[int(x) for x in  form.cleaned_data['choices']]}
             return HttpResponseRedirect(reverse('red-fever-report', args=(id, pd), current_app='red'))
     else:
         form = matrix_select_from_model(id)()
@@ -56,8 +57,11 @@ def run_fever_report(request, id, pd):
     us - c2,l2
     """
     ms = MatrixSet.objects.get(pk=id)
-    f = request.session.get('functions', [])
-    rep = ms.run_fever_chart(pd, f)
+    f = request.session.get('functions', {})
+    if not f or not f["id"] == id:
+            return HttpResponseRedirect(reverse('red-display-functions',
+                                                args=(id, pd), current_app='red'))
+    rep = ms.run_fever_chart(pd, f["vals"])
     # put the 5x5 matrices in (val, severity) format
     vals = (zip(*f) for f in zip(rep, severities))
     return render_to_response("fever_chart.html", {"id":id, "pd":pd, "report":vals})
@@ -70,8 +74,10 @@ def run_text_report(request, id, pd):
     us - c2,l2
     """
     ms = MatrixSet.objects.get(pk=id)
-    f = request.session.get('functions', [])
-    rep = ms.run_report(pd, f)
+    f = request.session.get('functions', {})
+    if not f or not f["id"] == id:
+            return HttpResponseRedirect(reverse('red-display-functions', args=(id, pd), current_app='red'))
+    rep = ms.run_report(pd, f["vals"])
     # put the 5x5 matrices in (val, severity) format
     mat = ms.ef_matrix
     ret = {"high":[],
