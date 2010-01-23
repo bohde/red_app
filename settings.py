@@ -81,6 +81,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'ide.red',
     'test_utils',
+    'django_extensions',
 )
  
 SESSION_ENGINE = "django.contrib.sessions.backends.file"

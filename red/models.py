@@ -58,13 +58,14 @@ class JSONField(models.TextField):
 
 class MatrixSet(models.Model):
     name = models.CharField(max_length=250)
+    temp = models.BooleanField(default=True)
+    creation = models.DateTimeField(auto_now_add=True)
     ec_matrix = JSONField("EC Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     cf_matrix = JSONField("CF Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     cfp_matrix = JSONField("CFP Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     ef_matrix = JSONField("EF Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     c1_matrix = JSONField("C1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     l1_matrix = JSONField("L1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
-
 
     def get_c1_matrix(self):
         if not(self.c1_matrix):
