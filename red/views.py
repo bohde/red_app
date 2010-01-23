@@ -11,15 +11,13 @@ severities = [["low", "med"] + ["high"] * 3,
               ["low"] * 3 + ["med"] * 2,
               ["low"] * 4 + ["med"]]
 
-def index(request):
-    return render_to_response('index.html')
-
 def upload(request):
     if request.method == 'POST':
         form = MatrixUploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             data = form.save()
-            return HttpResponseRedirect(reverse('red-display-matrix', args=(data.id,), current_app='red'))
+            return HttpResponseRedirect(reverse('red-display-matrix',
+                                                args=(data.id,), current_app='red'))
     else:
         form = MatrixUploadFileForm()
     return render_to_response('upload.html', {'form':form})
