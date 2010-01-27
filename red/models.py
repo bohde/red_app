@@ -31,7 +31,7 @@ class JSONField(models.TextField):
     def to_python(self, value):
         """Convert our string value to JSON after we load it from the DB"""
 
-        if value == "":
+        if value == "" or value == None:
             return None
 
         try:
