@@ -84,11 +84,18 @@ class TestREDMath(TestCase):
         self.c1 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
                           lol_to_dict(self.c1m))
 
+        self.c2m = [[3,1],[1,1]]
+        self.c2 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
+                          lol_to_dict(self.c2m))
+
     def testMatrixMath(self):
         self.assertEquals(self.ec.mult(self.cf).matrix, self.ef.matrix)
     
     def testMatrixC1(self):
-        self.assertEquals(self.ec.c1(self.cfp).matrix, lol_to_dict(self.c1m))
+        self.assertEquals(self.ec.c1(self.cfp).matrix, self.c1.matrix)
 
     def testMatrixL1(self):
         self.assertEquals(self.ef.l1().matrix, self.l1.matrix)
+
+    def testMatrixC2(self):
+        self.assertEquals(self.ec.c2(self.cfp).matrix, self.c2.matrix)

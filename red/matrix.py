@@ -1,7 +1,7 @@
 import numpy
 from scipy import sparse, int8, linalg
 from rbco.msexcel import xls_to_excelerator_dict as xls
-from itertools import count, takewhile, product, imap
+from itertools import count, takewhile, product, imap, izip
 from operator import mul
 from django.utils import simplejson as json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -13,6 +13,12 @@ def titlecase(s):
                   lambda mo: mo.group(0)[0].upper() +
                   mo.group(0)[1:].lower(),
                   s)
+
+def special_round(n):
+    if n < 1 and n > 0:
+        return 1
+    else:
+        return int(round(n))
 
 class Matrix(object):
     """
@@ -69,17 +75,31 @@ class Matrix(object):
         matrix = Matrix.from_sparse_matrix(ret)
         return Matrix(cols, rows, matrix, width, height)
 
-    def c2(self):
-        pass
+    def c2(self, other):
+        ret = sparse.dok_matrix((self.height, other.width))
+        rows = self.rows
+        height = self.height
+        cols = other.cols
+        width = other.width
+        a = self.to_sparse_matrix().tolil()
+        b = other.to_sparse_matrix().T.tolil()
+        for i,j in product(xrange(height), xrange(width)):
+            r = a.getrow(i).toarray().tolist()[0]
+            c = b.getrow(j).toarray().tolist()[0]
+            lol = [float(x*y) for x,y in izip(r,c)]
+            m =  special_round(numpy.mean(lol))
+            ret[i,j] = m
+        matrix = Matrix.from_sparse_matrix(ret)
+        return Matrix(cols, rows, matrix, width, height)
 
     def l1(self):
-        func = lambda i: int(round(5.0 * i / self.max))
+        func = lambda i: special_round(5.0 * i / self.max)
         matrix = ((k,func(v)) for k,v in self.matrix.iteritems())
         return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
                       height=self.height, width=self.width)
 
     def l2(self, agg):
-        func = lambda k,v: int(round(5.0 * v / max([agg[k,v], v])))
+        func = lambda k,v: special_round(5.0 * v / max([agg[k,v], v]))
         matrix = ((k,fun(k,v)) for k,v in self.matrix.iteritems())
         return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
                       height=self.height, width=self.width)
