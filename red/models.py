@@ -76,7 +76,7 @@ class MatrixSet(models.Model):
         return self.c1_matrix
 
     def get_c2_matrix(self):
-        if not(self.c1_matrix):
+        if not(self.c2_matrix):
             self.c2_matrix = self.ec_matrix.c2(self.cfp_matrix)
             self.save()
         return self.c2_matrix
