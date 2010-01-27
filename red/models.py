@@ -65,7 +65,9 @@ class MatrixSet(models.Model):
     cfp_matrix = JSONField("CFP Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     ef_matrix = JSONField("EF Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     c1_matrix = JSONField("C1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
+    c2_matrix = JSONField("C2 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     l1_matrix = JSONField("L1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
+    l2_matrix = JSONField("L2 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
 
     def get_c1_matrix(self):
         if not(self.c1_matrix):
@@ -74,7 +76,10 @@ class MatrixSet(models.Model):
         return self.c1_matrix
 
     def get_c2_matrix(self):
-        pass
+        if not(self.c1_matrix):
+            self.c2_matrix = self.ec_matrix.c2(self.cfp_matrix)
+            self.save()
+        return self.c2_matrix
 
     def get_l1_matrix(self):
         if not(self.l1_matrix):
@@ -90,14 +95,16 @@ class MatrixSet(models.Model):
                "hs": lambda: (self.get_c1_matrix(), self.get_l2_matrix()),
                "uss": lambda: (self.get_c2_matrix(), self.get_l1_matrix()),
                "us": lambda: (self.get_c2_matrix(), self.get_l2_matrix())}
-        return Matrix.run_fever_chart(self.get_c1_matrix(), self.get_l1_matrix(), functions)
+        c,l = pds[pd]()
+        return Matrix.run_fever_chart(c, l, functions)
 
     def run_report(self, pd, functions):
         pds = {"hss": lambda: (self.get_c1_matrix(), self.get_l1_matrix()),
                "hs": lambda: (self.get_c1_matrix(), self.get_l2_matrix()),
                "uss": lambda: (self.get_c2_matrix(), self.get_l1_matrix()),
                "us": lambda: (self.get_c2_matrix(), self.get_l2_matrix())}
-        return Matrix.run_report(self.get_c1_matrix(), self.get_l1_matrix(), functions)
+        c,l = pds[pd]()
+        return Matrix.run_report(c, l, functions)
 
 class MatrixUploadFileForm(forms.ModelForm):
     class Meta:
