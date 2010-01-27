@@ -9,7 +9,7 @@ class Job(HourlyJob):
 
     def execute(self):
         an_hour_ago = datetime.datetime.now() - hour
-        for ms in MatrixSet.objects.filter(temp=True).filter(creation__gt=an_hour_ago).all():
+        for ms in MatrixSet.objects.filter(temp=True).filter(creation__lt=an_hour_ago).all():
                 ms.delete()
 
                 
