@@ -88,7 +88,10 @@ class MatrixSet(models.Model):
         return self.l1_matrix
 
     def get_l2_matrix(self):
-        pass
+        if not(self.l2_matrix):
+            self.l2_matrix = self.ef_matrix.l2()
+            self.save()
+        return self.l2_matrix
 
     def run_fever_chart(self, pd, functions):
         pds = {"hss": lambda: (self.get_c1_matrix(), self.get_l1_matrix()),

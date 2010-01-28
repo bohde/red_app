@@ -98,17 +98,30 @@ class Matrix(object):
         return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
                       height=self.height, width=self.width)
 
-    def l2(self, agg):
-        func = lambda k,v: special_round(5.0 * v / max([agg[k,v], v]))
-        matrix = ((k,fun(k,v)) for k,v in self.matrix.iteritems())
+    def l2(self):
+        func = lambda i: special_round(5.0 * i / float(self.agg()))
+        matrix = ((k,func(v)) for k,v in self.matrix.iteritems())
         return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
                       height=self.height, width=self.width)
+
+    def agg(self):
+        return max(v for k,v in self.matrix.iteritems())
+
+    def mask(self, row_nums):
+        row_nums = set(row_nums)
+        row_lookup = dict((v,n) for n,v in enumerate(row_nums))
+        rows = [row for n,row in enumerate(self.rows) if n in row_nums]
+        height = len(rows)
+        cols = self.cols
+        width = self.width
+        matrix = dict(((x,row_lookup[y]),v) for ((x,y),v) in self.matrix.iteritems() if y in row_nums)
+        return Matrix(cols=cols, rows=rows, matrix=matrix, height=height, width=width)
 
     @staticmethod
     def run_fever_chart(c, l, functions):
         ret = [[0 for y in xrange(5)] for x in xrange(5)]
-        cm = c.to_sparse_matrix()
-        lm = l.to_sparse_matrix()
+        cm = c.mask(functions).to_sparse_matrix()
+        lm = l.mask(functions).to_sparse_matrix()
         for k,x in cm.iteritems():
             if x:
                 y = lm.get(k)
@@ -119,8 +132,8 @@ class Matrix(object):
     @staticmethod
     def run_report(c, l, functions):
         ret = [[[] for y in xrange(5)] for x in xrange(5)]
-        cm = c.to_sparse_matrix()
-        lm = l.to_sparse_matrix()
+        cm = c.mask(functions).to_sparse_matrix()
+        lm = l.mask(functions).to_sparse_matrix()
         for k,x in cm.iteritems():
             if x:
                 y = lm.get(k)

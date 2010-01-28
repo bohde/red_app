@@ -80,6 +80,10 @@ class TestREDMath(TestCase):
         self.l1 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
                           lol_to_dict(self.l1m))
 
+        self.l2m = [[1,1],[0,1]]
+        self.l2 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
+                          lol_to_dict(self.l2m))
+
         self.c1m = [[5,2],[1,2]]
         self.c1 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
                           lol_to_dict(self.c1m))
@@ -88,14 +92,33 @@ class TestREDMath(TestCase):
         self.c2 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
                           lol_to_dict(self.c2m))
 
+
     def testMatrixMath(self):
         self.assertEquals(self.ec.mult(self.cf).matrix, self.ef.matrix)
     
-    def testMatrixC1(self):
-        self.assertEquals(self.ec.c1(self.cfp).matrix, self.c1.matrix)
-
     def testMatrixL1(self):
         self.assertEquals(self.ef.l1().matrix, self.l1.matrix)
 
+    def testMatrixAgg(self):
+        self.assertEquals(self.ef.agg(), 3)
+
+    def testMatrixL2(self):
+        self.ef.agg = lambda: 15
+        self.assertEquals(self.ef.l2().matrix, self.l2.matrix)
+
+    def testMatrixC1(self):
+        self.assertEquals(self.ec.c1(self.cfp).matrix, self.c1.matrix)
+
     def testMatrixC2(self):
         self.assertEquals(self.ec.c2(self.cfp).matrix, self.c2.matrix)
+
+    def testMaskRows(self):
+        m = self.ef.mask([0])
+        mat = [[1,3]]
+        self.assertEquals(m.rows, ["Import Mechanical"])
+        self.assertEquals(m.matrix, lol_to_dict(mat))
+
+        m = self.ef.mask([1])
+        mat = [[0,3]]
+        self.assertEquals(m.rows, ["Export Mechanical"])
+        self.assertEquals(m.matrix, lol_to_dict(mat))

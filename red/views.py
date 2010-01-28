@@ -73,7 +73,7 @@ def run_fever_report(request, id, pd_choices, matrixset, funcs):
 @requires_functions
 def run_text_report(request, id, pd_choices, matrixset, funcs):
     rep = matrixset.run_report(pd_choices, funcs)
-    mat = matrixset.ef_matrix
+    mat = matrixset.ef_matrix.mask(funcs)
     ret = {"high":[],
            "med":[],
            "low":[]}
