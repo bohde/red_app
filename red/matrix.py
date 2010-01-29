@@ -100,7 +100,8 @@ class Matrix(object):
                       height=self.height, width=self.width)
 
     def l2(self):
-        func = lambda i: special_round(5.0 * i / float(self.agg()))
+        agg = float(self.agg())
+        func = lambda i: special_round(5.0 * i / agg)
         matrix = ((k,func(v)) for k,v in self.matrix.iteritems())
         return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
                       height=self.height, width=self.width)
