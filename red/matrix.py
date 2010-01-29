@@ -86,9 +86,10 @@ class Matrix(object):
         for i,j in product(xrange(height), xrange(width)):
             r = a.getrow(i).toarray().tolist()[0]
             c = b.getrow(j).toarray().tolist()[0]
-            lol = [float(x*y) for x,y in izip(r,c)]
-            m =  special_round(numpy.mean(lol))
-            ret[i,j] = m
+            lol = [float(x*y) for x,y in izip(r,c) if x and y]
+            if lol:
+                m =  special_round(numpy.mean(lol))
+                ret[i,j] = m
         matrix = Matrix.from_sparse_matrix(ret)
         return Matrix(cols, rows, matrix, width, height)
 

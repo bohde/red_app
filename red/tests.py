@@ -88,7 +88,7 @@ class TestREDMath(TestCase):
         self.c1 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
                           lol_to_dict(self.c1m))
 
-        self.c2m = [[3,1],[1,1]]
+        self.c2m = [[3,2],[1,2]]
         self.c2 = Matrix(["Creep", "Fatigue"], ["Import Mechanical", "Export Mechanical"],
                           lol_to_dict(self.c2m))
 
