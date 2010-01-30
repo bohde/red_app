@@ -6,6 +6,7 @@ from operator import mul
 from django.utils import simplejson as json
 from django.core.serializers.json import DjangoJSONEncoder
 from collections import defaultdict
+import json
 
 import re
 def titlecase(s):
@@ -43,18 +44,27 @@ class Matrix(object):
             d[y,x] = v
         return d
 
-    def mult(self, other):
+    def mult_like(self, other, f):
         """
-        Matrix multiplication preserving rows and column metadata
+        Setup functions for multiplication like routines.
+        Will pass all locals to f.
         """
         rows = self.rows
         height = self.height
         cols = other.cols
         width = other.width
-        a = self.to_sparse_matrix().tocsc()
-        b = other.to_sparse_matrix().tocsc()
-        matrix = Matrix.from_sparse_matrix(a * b)
+        matrix = f(**locals())
         return Matrix(cols, rows, matrix, width, height)
+
+    def mult(self, other):
+        """
+        Matrix multiplication preserving rows and column metadata
+        """
+        def multiply(self, other, **kwargs):
+            a = self.to_sparse_matrix().tocsc()
+            b = other.to_sparse_matrix().tocsc()
+            return Matrix.from_sparse_matrix(a * b)
+        return self.mult_like(other, multiply)
 
     def get_max(self):
         """
@@ -71,20 +81,17 @@ class Matrix(object):
         Performed as matrix multiplication, but instead of summing the multiplied pairs,
         find the maximum.
         """
-        ret = sparse.dok_matrix((self.height, other.width))
-        rows = self.rows
-        height = self.height
-        cols = other.cols
-        width = other.width
-        a = self.to_sparse_matrix().tolil()
-        b = other.to_sparse_matrix().T.tolil()
-        for i,j in product(xrange(height), xrange(width)):
-            r = a.getrow(i).toarray().tolist()[0]
-            c = b.getrow(j).toarray().tolist()[0]
-            m =  max(imap(mul, r, c))
-            ret[i,j] = m
-        matrix = Matrix.from_sparse_matrix(ret)
-        return Matrix(cols, rows, matrix, width, height)
+        def c1_routine(self, other, height, width, **kwargs):
+            ret = sparse.dok_matrix((height, width))
+            a = self.to_sparse_matrix().tolil()
+            b = other.to_sparse_matrix().T.tolil()
+            for i,j in product(xrange(height), xrange(width)):
+                r = a.getrow(i).toarray().tolist()[0]
+                c = b.getrow(j).toarray().tolist()[0]
+                m =  max(imap(mul, r, c))
+                ret[i,j] = m
+            return Matrix.from_sparse_matrix(ret)
+        return self.mult_like(other, c1_routine)
 
     def c2(self, other):
         """
@@ -92,22 +99,19 @@ class Matrix(object):
         Performed as matrix multiplication, but instead of summing the multiplied pairs,
         find the arithmetic mean.
         """
-        ret = sparse.dok_matrix((self.height, other.width))
-        rows = self.rows
-        height = self.height
-        cols = other.cols
-        width = other.width
-        a = self.to_sparse_matrix().tolil()
-        b = other.to_sparse_matrix().T.tolil()
-        for i,j in product(xrange(height), xrange(width)):
-            r = a.getrow(i).toarray().tolist()[0]
-            c = b.getrow(j).toarray().tolist()[0]
-            lol = [float(x*y) for x,y in izip(r,c) if x and y]
-            if lol:
-                m =  special_round(numpy.mean(lol))
-                ret[i,j] = m
-        matrix = Matrix.from_sparse_matrix(ret)
-        return Matrix(cols, rows, matrix, width, height)
+        def c2_routine(self, other, height, width, **kwargs):
+            ret = sparse.dok_matrix((height, width))
+            a = self.to_sparse_matrix().tolil()
+            b = other.to_sparse_matrix().T.tolil()
+            for i,j in product(xrange(height), xrange(width)):
+                r = a.getrow(i).toarray().tolist()[0]
+                c = b.getrow(j).toarray().tolist()[0]
+                lol = [float(x*y) for x,y in izip(r,c) if x and y]
+                if lol:
+                    m =  special_round(numpy.mean(lol))
+                    ret[i,j] = m
+            return Matrix.from_sparse_matrix(ret)
+        return self.mult_like(other, c2_routine)
 
     def l1(self, rows):
         """
@@ -191,8 +195,13 @@ class Matrix(object):
         matrix = dict(((y-1, x-1),v) for (x,y),v in parsed.iteritems() if check(x,y) and v != 0 )
         return Matrix(cols=cols, rows=rows, matrix=matrix, width=width, height=height)
 
+    def __unicode__(self):
+        return json.dumps(self, cls=MatrixEncoder)
 
 class MatrixEncoder(DjangoJSONEncoder):
+    """
+    Encodes a Matrix object as JSON
+    """
     def default(self, obj):
         if isinstance(obj, Matrix):
             return {"__matrix__": True,
