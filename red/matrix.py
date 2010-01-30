@@ -44,6 +44,9 @@ class Matrix(object):
         return d
 
     def mult(self, other):
+        """
+        Matrix multiplication preserving rows and column metadata
+        """
         rows = self.rows
         height = self.height
         cols = other.cols
@@ -54,12 +57,20 @@ class Matrix(object):
         return Matrix(cols, rows, matrix, width, height)
 
     def get_max(self):
+        """
+        Find the maximum value of the entire matrix.
+        """
         if not(self._max):
-            self._max = max(self.to_sparse_matrix().itervalues())
+            self._max = int(max(self.to_sparse_matrix().itervalues()))
         return self._max
     max = property(get_max)
 
     def c1(self, other):
+        """
+        C1 calculation.
+        Performed as matrix multiplication, but instead of summing the multiplied pairs,
+        find the maximum.
+        """
         ret = sparse.dok_matrix((self.height, other.width))
         rows = self.rows
         height = self.height
@@ -76,6 +87,11 @@ class Matrix(object):
         return Matrix(cols, rows, matrix, width, height)
 
     def c2(self, other):
+        """
+        C2 calculation
+        Performed as matrix multiplication, but instead of summing the multiplied pairs,
+        find the arithmetic mean.
+        """
         ret = sparse.dok_matrix((self.height, other.width))
         rows = self.rows
         height = self.height
@@ -93,23 +109,29 @@ class Matrix(object):
         matrix = Matrix.from_sparse_matrix(ret)
         return Matrix(cols, rows, matrix, width, height)
 
-    def l1(self):
+    def l1(self, rows):
+        """
+        L1 is L2 applied to only certain rows
+        """
+        return self.mask(rows).l2()
+
+    def l2(self, rows=None):
+        """
+        Normalize the matrix s.t. values are between 1 and 5
+        """
         func = lambda i: special_round(5.0 * i / self.max)
-        matrix = ((k,func(v)) for k,v in self.matrix.iteritems())
-        return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
-                      height=self.height, width=self.width)
-
-    def l2(self):
-        agg = float(self.agg())
-        func = lambda i: special_round(5.0 * i / agg)
-        matrix = ((k,func(v)) for k,v in self.matrix.iteritems())
-        return Matrix(cols=self.cols, rows=self.rows, matrix=dict(matrix),
-                      height=self.height, width=self.width)
-
-    def agg(self):
-        return max(v for k,v in self.matrix.iteritems())
+        def process(mat):
+            matrix = ((k,func(v)) for k,v in mat.matrix.iteritems())
+            return Matrix(cols=mat.cols, rows=mat.rows, matrix=dict(matrix),
+                          height=mat.height, width=mat.width)
+        if rows == None:
+            return process(self)
+        return process(self.mask(rows))
 
     def mask(self, row_nums):
+        """
+        Build a new matrix composed of the rows in row_nums
+        """
         row_nums = set(row_nums)
         row_lookup = dict((v,n) for n,v in enumerate(row_nums))
         rows = [row for n,row in enumerate(self.rows) if n in row_nums]
@@ -120,10 +142,10 @@ class Matrix(object):
         return Matrix(cols=cols, rows=rows, matrix=matrix, height=height, width=width)
 
     @staticmethod
-    def run_fever_chart(c, l, functions):
+    def run_fever_chart(c, l):
         ret = [[0 for y in xrange(5)] for x in xrange(5)]
-        cm = c.mask(functions).to_sparse_matrix()
-        lm = l.mask(functions).to_sparse_matrix()
+        cm = c.to_sparse_matrix()
+        lm = l.to_sparse_matrix()
         for k,x in cm.iteritems():
             if x:
                 y = lm.get(k)
@@ -132,10 +154,10 @@ class Matrix(object):
         return ret
 
     @staticmethod
-    def run_report(c, l, functions):
+    def run_report(c, l):
         ret = [[[] for y in xrange(5)] for x in xrange(5)]
-        cm = c.mask(functions).to_sparse_matrix()
-        lm = l.mask(functions).to_sparse_matrix()
+        cm = c.to_sparse_matrix()
+        lm = l.to_sparse_matrix()
         for k,x in cm.iteritems():
             if x:
                 y = lm.get(k)
@@ -168,9 +190,6 @@ class Matrix(object):
 
         matrix = dict(((y-1, x-1),v) for (x,y),v in parsed.iteritems() if check(x,y) and v != 0 )
         return Matrix(cols=cols, rows=rows, matrix=matrix, width=width, height=height)
-
-    
-
 
 
 class MatrixEncoder(DjangoJSONEncoder):

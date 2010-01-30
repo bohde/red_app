@@ -97,13 +97,13 @@ class TestREDMath(TestCase):
         self.assertEquals(self.ec.mult(self.cf).matrix, self.ef.matrix)
     
     def testMatrixL1(self):
-        self.assertEquals(self.ef.l1().matrix, self.l1.matrix)
+        self.assertEquals(self.ef.l1([0,1]).matrix, self.l1.matrix)
 
     def testMatrixAgg(self):
-        self.assertEquals(self.ef.agg(), 3)
+        self.assertEquals(self.ef.max, 3)
 
     def testMatrixL2(self):
-        self.ef.agg = lambda: 15
+        self.ef._max = 15
         self.assertEquals(self.ef.l2().matrix, self.l2.matrix)
 
     def testMatrixC1(self):

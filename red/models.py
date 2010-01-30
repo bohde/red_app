@@ -69,45 +69,39 @@ class MatrixSet(models.Model):
     l1_matrix = JSONField("L1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
     l2_matrix = JSONField("L2 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
 
-    def get_c1_matrix(self):
+    def get_c1_matrix(self, functions):
         if not(self.c1_matrix):
             self.c1_matrix = self.ec_matrix.c1(self.cfp_matrix)
             self.save()
-        return self.c1_matrix
+        return self.c1_matrix.mask(functions)
 
-    def get_c2_matrix(self):
+    def get_c2_matrix(self, functions):
         if not(self.c2_matrix):
             self.c2_matrix = self.ec_matrix.c2(self.cfp_matrix)
             self.save()
-        return self.c2_matrix
+        return self.c2_matrix.mask(functions)
 
-    def get_l1_matrix(self):
-        if not(self.l1_matrix):
-            self.l1_matrix = self.ef_matrix.l1()
-            self.save()
-        return self.l1_matrix
+    def get_l1_matrix(self, functions):
+        return self.ef_matrix.l1(functions)
 
-    def get_l2_matrix(self):
-        if not(self.l2_matrix):
-            self.l2_matrix = self.ef_matrix.l2()
-            self.save()
-        return self.l2_matrix
+    def get_l2_matrix(self, functions):
+        return self.ef_matrix.l2(functions)
 
     def run_fever_chart(self, pd, functions):
-        pds = {"hss": lambda: (self.get_c1_matrix(), self.get_l1_matrix()),
-               "hs": lambda: (self.get_c1_matrix(), self.get_l2_matrix()),
-               "uss": lambda: (self.get_c2_matrix(), self.get_l1_matrix()),
-               "us": lambda: (self.get_c2_matrix(), self.get_l2_matrix())}
+        pds = {"hss": lambda: (self.get_c1_matrix(functions), self.get_l1_matrix(functions)),
+               "hs": lambda: (self.get_c1_matrix(functions), self.get_l2_matrix(functions)),
+               "uss": lambda: (self.get_c2_matrix(functions), self.get_l1_matrix(functions)),
+               "us": lambda: (self.get_c2_matrix(functions), self.get_l2_matrix(functions))}
         c,l = pds[pd]()
-        return Matrix.run_fever_chart(c, l, functions)
+        return Matrix.run_fever_chart(c, l)
 
     def run_report(self, pd, functions):
-        pds = {"hss": lambda: (self.get_c1_matrix(), self.get_l1_matrix()),
-               "hs": lambda: (self.get_c1_matrix(), self.get_l2_matrix()),
-               "uss": lambda: (self.get_c2_matrix(), self.get_l1_matrix()),
-               "us": lambda: (self.get_c2_matrix(), self.get_l2_matrix())}
+        pds = {"hss": lambda: (self.get_c1_matrix(functions), self.get_l1_matrix(functions)),
+               "hs": lambda: (self.get_c1_matrix(functions), self.get_l2_matrix(functions)),
+               "uss": lambda: (self.get_c2_matrix(functions), self.get_l1_matrix(functions)),
+               "us": lambda: (self.get_c2_matrix(functions), self.get_l2_matrix(functions))}
         c,l = pds[pd]()
-        return Matrix.run_report(c, l, functions)
+        return Matrix.run_report(c, l)
 
 class MatrixUploadFileForm(forms.ModelForm):
     class Meta:
