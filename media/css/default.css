@@ -141,6 +141,10 @@ ul.errorlist {
     padding: 0;
 }
 
+.functions lh{
+    font-weight: bold;
+}
+
 .functions li {
     margin-top: 3px;
 }
