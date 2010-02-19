@@ -64,15 +64,18 @@ def requires_functions(f):
     return inner
         
 @requires_functions
-def run_fever_report(request, id, pd_choices, matrixset, funcs):
-    rep = matrixset.run_fever_chart(pd_choices, funcs)
+def run_fever_report(request, id, pd_choice, matrixset, funcs):
+    rep = matrixset.run_fever_chart(pd_choice, funcs)
     # put the 5x5 matrices in (val, severity) format
     vals = (zip(*f) for f in zip(rep, severities))
-    return render_to_response("fever_chart.html", {"id":id, "pd":pd_choices, "report":vals})
+    return render_to_response("fever_chart.html", {"id":id,
+                                                   "pd":pd_choice,
+                                                   "pd_pretty":dict(pd_choices)[pd_choice],
+                                                   "report":vals})
 
 @requires_functions
-def run_text_report(request, id, pd_choices, matrixset, funcs):
-    rep = matrixset.run_report(pd_choices, funcs)
+def run_text_report(request, id, pd_choice, matrixset, funcs):
+    rep = matrixset.run_report(pd_choice, funcs)
     mat = matrixset.ef_matrix.mask(funcs)
     ret = {"high":[],
            "med":[],

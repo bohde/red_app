@@ -4,9 +4,12 @@
 
 {% block content %}
 <div class="report">
+<p>{{ pd_pretty }}</p>
 <table>
 <tr>
-  <td class="side" rowspan=6><b>Likelihood</b></td>
+  <td class="side" rowspan=6>
+    <div class="inner">Likelihood</div>
+  </td>
   <th colspan=5>Consequence</th>
 </tr>
 {% for row in report %}

@@ -80,11 +80,23 @@ ul.errorlist {
     width: 100%;
     padding: 0;
 }
+
 .report .side{
     margin: 0;
-    text-align:right;
-    width: 0;
+    padding: 0;
+    width: 15px;
 }
+
+.report .side .inner{
+    padding:0;
+    margin:0;
+    font-weight:bold;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    float:right;
+}
+
 .report table{
     margin-top: 50px;
     width: 75%;
