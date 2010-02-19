@@ -8,6 +8,7 @@ import views
 
 urlpatterns = patterns('', 
     url(r'^$', direct_to_template, {'template': 'index.html' }, name="red-index"),
+    url(r'^help/$', direct_to_template, {'template': 'help.html' }, name="red-help"),
     url(r'^upload/$', views.upload, name="red-upload"),
     url(r'^matrix/$', views.display_matrices, name="red-display-all-matrices"),
     url(r'^matrix/(\d+)/$', views.display_matrix, name="red-display-matrix"),         
