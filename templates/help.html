@@ -3,5 +3,36 @@
 {% block title %}Help{% endblock %}
 
 {% block content %}
-<p>This is a static help page.</p>
+<div class="helptext">
+<h3>Running a Report</h3>
+ <ul class="none">
+   <li><a href="{% url red-display-all-matrices %}">Select</a> or
+     <a href="{% url red-upload %}">upload</a>
+     your chosen set of matrices.</li>
+   <li>Choose the product and design choices for the report.</li>
+   <li>Select the functions you want included in the report.</li>
+   <li>You will be shown a fever chart, with a summary of the functions you chose.</li>
+   <li>Follow the link to download the text report.</li>
+ </ul>
+
+<h3>Upload</h3>
+  <ul class="none">
+    <li>Things you will need:</li>
+    <li>
+      <ul class="none">
+        <li>Function Component Matrix</li>
+        <li>Component Failure Prime Matrix</li>
+        <li>At least one of the following:</li>
+        <ul class="none">
+          <li>Component Failure Matrix</li>
+          <li>Function Failure Matrix</li>
+        </ul>
+      </ul>
+    </li>
+    <li>All matrices must be Excel files.</li>
+    <li>Upload matrices will remain on the server for an hour.</li>
+  </ul>
+</div>
+
+
 {% endblock %}
