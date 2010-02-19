@@ -82,7 +82,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'ide.red',
-    'test_utils',
     'django_extensions',
 )
  
