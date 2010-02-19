@@ -81,11 +81,18 @@ def run_text_report(request, id, pd_choice, matrixset, funcs):
     mat = matrixset.ef_matrix.mask(funcs)
     ret = {"high":[],
            "med":[],
-           "low":[]}
+           "low":[],
+           "failures":[],
+           "functions":[]}
     for i,x in enumerate(rep):
         for j,y in enumerate(x):
             for xi, yi in y:
                 ret[severities[i][j]].append({"cf_value":(j+1, 5 - i),
                                               "failure":mat.cols[yi],
                                               "function":mat.rows[xi]})
+                ret["failures"].append(mat.cols[yi])
+                ret["functions"].append(mat.rows[xi])
+
+    ret["failures"]=sorted(list(set(ret["failures"])))
+    ret["functions"]=sorted(list(set(ret["functions"])))
     return render_to_response("risk_report.txt", ret, mimetype="text/plaintext")

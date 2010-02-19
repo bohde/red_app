@@ -1,15 +1,25 @@
 **************************Risk Statement******************************
+Functions with Failures
+-----------------------
+{% for el in functions %}{{ el }}
+{% endfor %}
 
+Failures Seen
+-----------------------
+{% for el in failures %}{{ el }}
+{% endfor %}
 Functions at High Risk
 ----------------------
 {% for el in high %}
 {{ el.function }} fails due to {{ el.failure }} at {{ el.cf_value }}
 {% endfor %}
+
 Functions at Medium Risk
 ----------------------
 {% for el in med %}
 {{ el.function }} fails due to {{ el.failure }} at {{ el.cf_value }}
 {% endfor %}
+
 Functions at Low Risk
 ----------------------
 {% for el in low %}
