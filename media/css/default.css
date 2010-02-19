@@ -116,3 +116,10 @@ ul.errorlist {
 .report .high {
      background-color: #F70542;
 }
+
+.protip {
+    top: 0px;
+    font-size: .6em;
+    font-style: italic;
+    text-align: center;
+}

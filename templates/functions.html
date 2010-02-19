@@ -5,10 +5,10 @@
 {% block content %}
 
 <p>Choose the Functions to Use.</p>
-
 <form method="post"
       action="{% url red-display-functions id pd %}">
 {{ form.as_p }}
+<div class="protip">Use control (or command on Mac) to select multiple functions. Shift to select areas.</div>
 <p><input type="submit" value="Submit" /></p>
 </form>
 
