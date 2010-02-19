@@ -3,8 +3,18 @@
 {% block title %}Fever Chart{% endblock %}
 
 {% block content %}
-<div class="report">
 <p>{{ pd_pretty }}</p>
+<div class="functions">
+<b>Functions Choices</b>
+<ul>
+{% for func in functions %}
+   <li>{{func}}</li>
+{% endfor %}
+
+</ul>
+</div>
+
+<div class="report">
 <table>
 <tr>
   <td class="side" rowspan=6>
@@ -20,7 +30,7 @@
 </tr>
 {% endfor %}
 </table>
+<p><a href="{% url red-text-report id pd %}">Download Text Report</a></p>
 </div>
 
-<p><a href="{% url red-text-report id pd %}">Download Text Report</a></p>
 {% endblock %}

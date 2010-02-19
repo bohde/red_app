@@ -68,10 +68,12 @@ def run_fever_report(request, id, pd_choice, matrixset, funcs):
     rep = matrixset.run_fever_chart(pd_choice, funcs)
     # put the 5x5 matrices in (val, severity) format
     vals = (zip(*f) for f in zip(rep, severities))
+    selected_funcs = [func for i,func in enumerate(matrixset.functions()) if i in set(funcs)]
     return render_to_response("fever_chart.html", {"id":id,
                                                    "pd":pd_choice,
                                                    "pd_pretty":dict(pd_choices)[pd_choice],
-                                                   "report":vals})
+                                                   "report":vals,
+                                                   "functions":selected_funcs})
 
 @requires_functions
 def run_text_report(request, id, pd_choice, matrixset, funcs):

@@ -12,7 +12,7 @@ body {
 }
 
 .links{
-    width: 604px;
+    width: 724px;
     margin-left: auto ;
     margin-right: auto ;
 }
@@ -38,13 +38,14 @@ body {
 }
 
 .content{
-    width: 600px;
+    width: 720px;
     min-height: 500px;
     margin-left: auto ;
     margin-right: auto ;
     background-color: #FFFFFF;
     border:2px solid #719D00;
-    
+    overflow:auto;
+    padding: 0px;
 }
 
 .content p {
@@ -77,8 +78,10 @@ ul.errorlist {
     padding: 4px 5px;
 }
 .report {
-    width: 100%;
-    padding: 0;
+    width: 590px;
+    padding: 0 4px;
+    margin: 0;
+    float: right;
 }
 
 .report .side{
@@ -99,11 +102,10 @@ ul.errorlist {
 
 .report table{
     margin-top: 50px;
-    width: 75%;
+    width: 100%;
     text-align: center;
     margin-left: auto ;
     margin-right: auto ;
-    left: -12.5%;
     color: #444444;
 }
 
@@ -123,3 +125,23 @@ ul.errorlist {
     font-style: italic;
     text-align: center;
 }
+
+.functions{
+    width: 110px;
+    font-size: .6em;
+    float: left;
+    margin: 0px;
+    text-align: center;
+    padding: 10px 4px;
+    color: #333333;
+}
+
+.functions ul{
+    list-style-type: none;
+    padding: 0;
+}
+
+.functions li {
+    margin-top: 3px;
+}
+

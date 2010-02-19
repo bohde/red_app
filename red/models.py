@@ -103,6 +103,11 @@ class MatrixSet(models.Model):
         c,l = pds[pd]()
         return Matrix.run_report(c, l)
 
+    def functions(self):
+        return self.ec_matrix.rows
+
+    
+
 class MatrixUploadFileForm(forms.ModelForm):
     class Meta:
         model = MatrixSet
@@ -180,7 +185,7 @@ class MatrixUploadFileForm(forms.ModelForm):
 
 def matrix_select_from_model(pk):
     matrix = MatrixSet.objects.get(pk=pk)
-    func_choices = list(enumerate(matrix.ec_matrix.rows))
+    func_choices = list(enumerate(matrix.functions()))
 
     class MatrixSelectFunctionsForm(forms.Form):
         choices = forms.MultipleChoiceField(choices=func_choices)
