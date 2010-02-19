@@ -5,7 +5,7 @@
 {% block content %}
 <p>{{ pd_pretty }}</p>
 <div class="functions">
-<lh>Functions Choices</lh>
+<lh>Functions Selected</lh>
 <ul>
 {% for func in functions %}
    <li>{{func}}</li>
@@ -15,13 +15,9 @@
 </div>
 
 <div class="report">
+<div class="inner">Likelihood</div>
+<div class="chart">
 <table>
-<tr>
-  <td class="side" rowspan=6>
-    <div class="inner">Likelihood</div>
-  </td>
-  <th colspan=5>Consequence</th>
-</tr>
 {% for row in report %}
 <tr>
 {% for el, severity in row %}
@@ -29,8 +25,11 @@
 {% endfor %}
 </tr>
 {% endfor %}
+<tr>
+  <td colspan=5><b>Consequence</b></td>
+</tr>
 </table>
 <p><a href="{% url red-text-report id pd %}">Download Text Report</a></p>
 </div>
-
+</div>
 {% endblock %}

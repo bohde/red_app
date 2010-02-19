@@ -78,35 +78,39 @@ ul.errorlist {
     padding: 4px 5px;
 }
 .report {
+    margin-top:50px;
     width: 590px;
-    padding: 0 4px;
-    margin: 0;
-    float: right;
+    padding: 0 0 0 4px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.report .side{
-    margin: 0;
-    padding: 0;
-    width: 15px;
-}
-
-.report .side .inner{
-    padding:0;
+.report .chart{
+    float:left;
     margin:0;
+    padding:0;
+    width:75%;
+}
+.report .inner{
+    margin-top:45px;
+    margin-right:-25px;
     font-weight:bold;
     -webkit-transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-    float:right;
+    float:left;
 }
 
 .report table{
-    margin-top: 50px;
     width: 100%;
     text-align: center;
     margin-left: auto ;
     margin-right: auto ;
     color: #444444;
+}
+
+.report table td{
+    width:20%;
 }
 
 .report .low {
@@ -130,9 +134,9 @@ ul.errorlist {
     width: 110px;
     font-size: .6em;
     float: left;
-    margin: 0px;
+    margin: 0px 4px;
     text-align: center;
-    padding: 10px 4px;
+    padding: 10px 8px;
     color: #333333;
 }
 
