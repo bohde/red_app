@@ -76,7 +76,7 @@ def run_fever_report(request, id, pd_choice, matrixset, funcs):
                                                    "functions":selected_funcs})
 
 @requires_functions
-def run_text_report(request, id, pd_choice, matrixset, funcs):
+def run_report(request, id, pd_choice, matrixset, funcs):
     rep = matrixset.run_report(pd_choice, funcs)
     mat = matrixset.ef_matrix.mask(funcs)
     ret = {"high":[],
@@ -95,4 +95,10 @@ def run_text_report(request, id, pd_choice, matrixset, funcs):
 
     ret["failures"]=sorted(list(set(ret["failures"])))
     ret["functions"]=sorted(list(set(ret["functions"])))
-    return render_to_response("risk_report.txt", ret, mimetype="text/plaintext")
+    return ret
+
+def run_text_report(request, id, pd):
+    return render_to_response("risk_report.txt", run_report(request, id, pd), mimetype="text/plaintext")
+
+def run_xls_report(request, id, pd):
+    return render_to_response("risk_report.xls", run_report(request, id, pd), mimetype="application/excel")

@@ -3,7 +3,7 @@
 {% block title %}Fever Chart{% endblock %}
 
 {% block content %}
-<p>{{ pd_pretty }}</p>
+<p>{{ pd_pretty }} Report</p>
 <div class="functions">
 <lh>Functions Selected</lh>
 <ul>
@@ -15,6 +15,7 @@
 </div>
 
 <div class="report">
+<p>Fever Chart</p>
 <div class="inner">Likelihood</div>
 <div class="chart">
 <table>
@@ -30,6 +31,7 @@
 </tr>
 </table>
 <p><a href="{% url red-text-report id pd %}">Download Text Report</a></p>
+<p><a href="{% url red-xls-report id pd %}">Download Excel Report</a></p>
 </div>
 </div>
 {% endblock %}

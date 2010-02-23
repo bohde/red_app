@@ -83,6 +83,12 @@ ul.errorlist {
     padding: 0 0 0 4px;
     margin-left: auto;
     margin-right: auto;
+    color: #444444;
+}
+
+.report p{
+    text-size: 1em;
+    margin-bottom:0;
 }
 
 .report .chart{
