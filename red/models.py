@@ -184,8 +184,8 @@ class MatrixUploadFileForm(forms.ModelForm):
         return matrix
 
 def matrix_select_from_model(pk):
-    matrix = MatrixSet.objects.get(pk=pk)
-    func_choices = list(enumerate(matrix.functions()))
+    matrix = MatrixSet.objects.only("ec_matrix").get(pk=pk)
+    func_choices = list(enumerate(matrix.ec_matrix.rows))
 
     class MatrixSelectFunctionsForm(forms.Form):
         choices = forms.MultipleChoiceField(choices=func_choices)

@@ -23,7 +23,7 @@ def upload(request):
     return render_to_response('upload.html', {'form':form})
 
 def display_matrices(request):
-    matrices = MatrixSet.objects.all()
+    matrices = MatrixSet.objects.only("name", "id").all()
     return render_to_response('matrices.html', {'matrices':matrices})
 
 pd_choices = (
