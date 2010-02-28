@@ -2,6 +2,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django import forms
+from django.template import RequestContext
+
 
 from models import MatrixUploadFileForm, MatrixSet, matrix_select_from_model
 
@@ -20,12 +22,13 @@ def upload(request):
                                                 args=(data.id,), current_app='red'))
     else:
         form = MatrixUploadFileForm()
-    return render_to_response('upload.html', {'form':form})
+    return render_to_response('upload.html', {'form':form},
+                              context_instance=RequestContext(request))  
 
 def display_matrices(request):
     matrices = MatrixSet.objects.only("name", "id").all()
-    return render_to_response('matrices.html', {'matrices':matrices})
-
+    return render_to_response('matrices.html', {'matrices':matrices},
+                              context_instance=RequestContext(request))  
 pd_choices = (
     ("hs", "Human Centric, System Level"),
     ("hss", "Human Centric, Subsystem Level"),
@@ -33,7 +36,8 @@ pd_choices = (
     ("uss", "Unmanned, Subsystem Level"))
 
 def display_matrix(request, id):
-    return render_to_response('pd_choices.html', {'id':int(id), 'choices':pd_choices})
+    return render_to_response('pd_choices.html', {'id':int(id), 'choices':pd_choices},
+                              context_instance=RequestContext(request))  
 
 def display_matrix_functions(request, id, pd):
     if request.method == 'POST':
@@ -44,7 +48,8 @@ def display_matrix_functions(request, id, pd):
             return HttpResponseRedirect(reverse('red-fever-report', args=(id, pd), current_app='red'))
     else:
         form = matrix_select_from_model(id)()
-    return render_to_response('functions.html', {'id':id, 'pd':pd, 'form':form})
+    return render_to_response('functions.html', {'id':id, 'pd':pd, 'form':form},
+                              context_instance=RequestContext(request))  
 
 
 def requires_functions(f):
@@ -73,7 +78,8 @@ def run_fever_report(request, id, pd_choice, matrixset, funcs):
                                                    "pd":pd_choice,
                                                    "pd_pretty":dict(pd_choices)[pd_choice],
                                                    "report":vals,
-                                                   "functions":selected_funcs})
+                                                   "functions":selected_funcs}, 
+                              context_instance=RequestContext(request))  
 
 @requires_functions
 def run_report(request, id, pd_choice, matrixset, funcs):
@@ -98,7 +104,9 @@ def run_report(request, id, pd_choice, matrixset, funcs):
     return ret
 
 def run_text_report(request, id, pd):
-    return render_to_response("risk_report.txt", run_report(request, id, pd), mimetype="text/plaintext")
+    return render_to_response("risk_report.txt", run_report(request, id, pd), mimetype="text/plaintext",
+                              context_instance=RequestContext(request))  
 
 def run_xls_report(request, id, pd):
-    return render_to_response("risk_report.xls", run_report(request, id, pd), mimetype="application/excel")
+    return render_to_response("risk_report.xls", run_report(request, id, pd), mimetype="application/excel",
+                              context_instance=RequestContext(request))  
