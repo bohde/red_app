@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils import simplejson as json
@@ -60,14 +61,14 @@ class MatrixSet(models.Model):
     name = models.CharField(max_length=250)
     temp = models.BooleanField(default=True)
     creation = models.DateTimeField(auto_now_add=True)
-    ec_matrix = JSONField("EC Matrix", cls=MatrixEncoder, object_hook=as_matrix)
-    cf_matrix = JSONField("CF Matrix", cls=MatrixEncoder, object_hook=as_matrix)
-    cfp_matrix = JSONField("CFP Matrix", cls=MatrixEncoder, object_hook=as_matrix)
-    ef_matrix = JSONField("EF Matrix", cls=MatrixEncoder, object_hook=as_matrix)
-    c1_matrix = JSONField("C1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
-    c2_matrix = JSONField("C2 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
-    l1_matrix = JSONField("L1 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
-    l2_matrix = JSONField("L2 Matrix", cls=MatrixEncoder, object_hook=as_matrix)
+    ec_matrix = JSONField("EC Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
+    cf_matrix = JSONField("CF Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
+    cfp_matrix = JSONField("CFP Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
+    ef_matrix = JSONField("EF Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
+    c1_matrix = JSONField("C1 Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
+    c2_matrix = JSONField("C2 Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
+    l1_matrix = JSONField("L1 Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
+    l2_matrix = JSONField("L2 Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
 
     def get_c1_matrix(self, functions):
         if not(self.c1_matrix):
