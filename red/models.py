@@ -70,6 +70,9 @@ class MatrixSet(models.Model):
     l1_matrix = JSONField("L1 Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
     l2_matrix = JSONField("L2 Matrix", cls=MatrixEncoder, object_hook=as_matrix, editable=False)
 
+    def __unicode__(self):
+        return self.name
+
     def get_c1_matrix(self, functions):
         if not(self.c1_matrix):
             self.c1_matrix = self.ec_matrix.c1(self.cfp_matrix)
