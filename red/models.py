@@ -1,10 +1,11 @@
-
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils import simplejson as json
 from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from matrix import Matrix, MatrixEncoder, as_matrix
+from django.conf import settings
 
 class JSONField(models.TextField):
     """JSONField is a generic textfield that neatly serializes/unserializes
@@ -192,7 +193,10 @@ def matrix_select_from_model(pk):
     func_choices = list(enumerate(matrix.ec_matrix.rows))
 
     class MatrixSelectFunctionsForm(forms.Form):
-        choices = forms.MultipleChoiceField(choices=func_choices)
+        choices = forms.MultipleChoiceField(widget=FilteredSelectMultiple("Functions", False), choices=func_choices)
+        class Media:
+            extend=True
+            css = {"all":("%scss/forms.css" % settings.ADMIN_MEDIA_PREFIX, )}
 
     return MatrixSelectFunctionsForm
         

@@ -2,14 +2,22 @@
 
 {% block title %}Function Choices{% endblock %}
 
+{% block js %}
+<script type="text/javascript" src="{{MEDIA_URL}}js/jsi18n.js"></script>
+{{ form.media }}
+{% endblock %}
+
 {% block content %}
 
 <p>Choose the Functions to Use.</p>
 <form method="post"
       action="{% url red-display-functions id pd %}">
+<div class="function-choice">
 {{ form.as_p }}
-<div class="protip">Use control (or command on Mac) to select multiple functions. Shift to select areas.</div>
-<p><input type="submit" value="Submit" /></p>
+</div>
+<div class="protip clear">Use control (or command on Mac) to select multiple functions. Shift to select areas.</div>
+<input id="function-submit" type="submit" value="Generate Report" />
+</div>
 </form>
 
 {% endblock %}
