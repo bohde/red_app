@@ -1,0 +1,45 @@
+.function-choice h2 {
+    font-size: 12px;
+    margin: 0;
+}
+
+.function-choice .selector-filter {
+    font-size: 16px;
+}
+
+
+.function-choice label{
+    display: none;
+}
+
+.function-choice .selector{
+    width: 630px;
+    margin-left: 45px;
+    font-size: 12px;
+}
+
+.function-choice a{
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 12px;
+}
+
+
+.selector .selector-available,.selector-chosen{
+    width: 300px;
+}
+
+.selector .selector-available input {
+    width: 260px;
+}
+
+.selector select {
+    width: 300px;
+    font-size: 11px;
+}
+
+.selector .selector-chosen h2 {
+    background:url("../img/nav-bg.gif") repeat-x scroll left bottom white;
+    color:#666666;
+}
+

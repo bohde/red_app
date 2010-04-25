@@ -160,37 +160,6 @@ ul.errorlist {
     margin-top: 3px;
 }
 
-.function-choice h2 {
-    font-size: 12px;
-    margin: 0;
-}
-
-.function-choice .selector-filter {
-    font-size: 16px;
-}
-
-
-.function-choice label{
-    display: none;
-}
-
-.function-choice .selector{
-    width: 570px;
-    margin-left: 75px;
-    font-size: 12px;
-}
-
-.function-choice a{
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 12px;
-}
-
-.selector .selector-chosen h2 {
-    background:url("../img/nav-bg.gif") repeat-x scroll left bottom white;
-    color:#666666;
-}
-
 
 .none {
     list-style-type: none;
