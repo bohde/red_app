@@ -193,7 +193,10 @@ def matrix_select_from_model(pk):
     func_choices = list(enumerate(matrix.ec_matrix.rows))
 
     class MatrixSelectFunctionsForm(forms.Form):
-        choices = forms.MultipleChoiceField(widget=FilteredSelectMultiple("Functions", False), choices=func_choices)
+        choices = forms.MultipleChoiceField(widget=FilteredSelectMultiple("Functions", False),
+                                            choices=func_choices,
+                                            error_messages={"required":
+                                                            "You need to select at least one function."})
         class Media:
             extend=True
             css = {"all":("%scss/forms.css" % settings.ADMIN_MEDIA_PREFIX, )}
