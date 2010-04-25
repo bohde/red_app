@@ -46,6 +46,7 @@ body {
     border:2px solid #719D00;
     overflow:auto;
     padding: 0px;
+    padding-bottom: 30px;
 }
 
 .content p {
@@ -242,7 +243,6 @@ ul.errorlist {
 #function-submit {
     margin-top: 10px;
     margin-left: 295px;
-
 }
 
 .clear {
