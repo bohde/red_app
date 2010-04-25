@@ -36,6 +36,11 @@ pd_choices = (
     ("uss", "Unmanned, Subsystem Level"))
 
 def display_matrix(request, id):
+    try:
+        if int(id)!=int(request.session['functions']['id']):
+            del request.session['functions']
+    except KeyError:
+        pass
     return render_to_response('pd_choices.html', {'id':int(id), 'choices':pd_choices},
                               context_instance=RequestContext(request))  
 
@@ -47,7 +52,11 @@ def display_matrix_functions(request, id, pd):
                                             "vals":[int(x) for x in  form.cleaned_data['choices']]}
             return HttpResponseRedirect(reverse('red-fever-report', args=(id, pd), current_app='red'))
     else:
-        form = matrix_select_from_model(id)()
+        try:
+            form = matrix_select_from_model(id)(initial=
+                                                {"choices":request.session['functions']['vals']})
+        except KeyError:
+            form = matrix_select_from_model(id)()
     return render_to_response('functions.html', {'id':id, 'pd':pd, 'form':form},
                               context_instance=RequestContext(request))  
 
