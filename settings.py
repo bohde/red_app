@@ -66,7 +66,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
-ROOT_URLCONF = 'ide.urls'
+ROOT_URLCONF = 'red_app.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT, 'templates'),
@@ -81,7 +81,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'ide.red',
+    'red',
     'django_extensions',
 )
  
