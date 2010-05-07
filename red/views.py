@@ -30,10 +30,10 @@ def display_matrices(request):
     return render_to_response('matrices.html', {'matrices':matrices},
                               context_instance=RequestContext(request))  
 pd_choices = (
-    ("hs", "Human Centric, System Level"),
-    ("hss", "Human Centric, Subsystem Level"),
-    ("us", "Unmanned, System Level"),
-    ("uss", "Unmanned, Subsystem Level"))
+    ("hs", "Human Centric, System Level", "Returns average likelihoods and high consequences."),
+    ("hss", "Human Centric, Subsystem Level", "Provides the most caution- returns high likelihoods and consequences."),
+    ("us", "Unmanned, System Level", "Provides the least caution- returns average likelihoods and consequences."),
+    ("uss", "Unmanned, Subsystem Level", "Returns high likelihoods and average consequences."))
 
 def display_matrix(request, id):
     try:

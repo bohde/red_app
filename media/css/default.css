@@ -137,6 +137,10 @@ ul.errorlist {
     text-align: center;
 }
 
+.pd-desc {
+    margin-top: -25px;
+}
+
 .functions{
     width: 110px;
     font-size: .6em;

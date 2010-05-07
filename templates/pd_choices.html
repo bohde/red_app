@@ -5,8 +5,9 @@
 {% block content %}
 <p>Choose your Product and Design Choices.</p>
 
-{% for short,name in choices %}
-<p><a href="{% url red-display-functions id short %}">{{ name }}</a></p>
+{% for short,name,desc in choices %}
+<p><a href="{% url red-display-functions id short %}">{{ name }}</a><div class="protip pd-desc">{{ desc }}</div></p>
+
 {% endfor %}
 
 {% endblock %}
