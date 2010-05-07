@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django import forms
 from django.template import RequestContext
-
+import xlwt
 
 from models import MatrixUploadFileForm, MatrixSet, matrix_select_from_model
 
@@ -117,5 +117,23 @@ def run_text_report(request, id, pd):
                               context_instance=RequestContext(request))  
 
 def run_xls_report(request, id, pd):
-    return render_to_response("risk_report.xls", run_report(request, id, pd), mimetype="application/excel",
-                              context_instance=RequestContext(request))  
+    response = HttpResponse(mimetype="application/mx-excel")
+    response['Content-Disposition'] = 'attachment; filename="report.xls"'
+    report = run_report(request, id, pd)
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('report')
+    for c,val in enumerate(['Severity', 'Function', 'Failure Mode', 'Likelihood', 'Consequence']):
+        ws.write(0, c, val)
+    row = 1
+    for severity in ["high", "med", "low"]:
+        for instance in report[severity]:
+            vals = (severity.title(),
+                    instance["function"],
+                    instance["failure"],
+                    instance["cf_value"][1],
+                    instance["cf_value"][0])
+            for c,val in enumerate(vals):
+                ws.write(row, c, val)
+            row += 1
+    wb.save(response)
+    return response

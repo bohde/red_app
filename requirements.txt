@@ -4,3 +4,4 @@ django-extensions
 -e svn+http://svn.scipy.org/svn/scipy/trunk#egg=scipy
 rbco.msexcel
 django-staticfiles
+xlwt
