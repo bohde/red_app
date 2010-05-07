@@ -64,6 +64,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'red_app.urls'
@@ -84,6 +85,7 @@ INSTALLED_APPS = (
     'red',
     'staticfiles',
     'django_extensions',
+    'django.contrib.flatpages',
 )
  
 SESSION_ENGINE = "django.contrib.sessions.backends.file"

@@ -49,6 +49,11 @@ body {
     padding-bottom: 30px;
 }
 
+.content address {
+    margin: 30px;
+    font-size: 1.2em;
+}
+
 .content p {
     text-align: center;
     margin-left: auto ;
