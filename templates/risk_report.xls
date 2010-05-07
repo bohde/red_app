@@ -1,5 +1,5 @@
 {% autoescape off %}Severity, Function, Failure Mode, Likelihood, Consequence
-{% for el in high %}High, {{ el.function }}, {{ el.failure }}, {{ el.cf_value.1 }}, {{ el.cf_value.0 }}
-{% endfor %}{% for el in med %}Med, {{ el.function }}, {{ el.failure }}, {{ el.cf_value.1 }}, {{ el.cf_value.0 }}
-{% endfor %}{% for el in low %}Low, {{ el.function }}, {{ el.failure }}, {{ el.cf_value.1 }}, {{ el.cf_value.0 }}
+{% for el in high %}High,{{ el.function }},{{ el.failure }},{{ el.cf_value.1 }},{{ el.cf_value.0 }}
+{% endfor %}{% for el in med %}Med,{{ el.function }},{{ el.failure }},{{ el.cf_value.1 }},{{ el.cf_value.0 }}
+{% endfor %}{% for el in low %}Low,{{ el.function }},{{ el.failure }},{{ el.cf_value.1 }},{{ el.cf_value.0 }}
 {% endfor %}{% endautoescape %}
