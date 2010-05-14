@@ -122,3 +122,13 @@ class TestREDMath(TestCase):
         mat = [[0,3]]
         self.assertEquals(m.rows, ["Export Mechanical"])
         self.assertEquals(m.matrix, lol_to_dict(mat))
+
+        m = self.ef.mask([0,1])
+        self.assertEquals(m.rows, self.ef.rows)
+        self.assertEquals(m.matrix, self.ef.matrix)
+
+        m = self.ef.mask([1,0])
+        self.assertEquals(m.rows, self.ef.rows)
+        self.assertEquals(m.matrix, self.ef.matrix)
+
+

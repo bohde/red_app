@@ -122,6 +122,7 @@ class Matrix(object):
     def l2(self, rows=None):
         """
         Normalize the matrix s.t. values are between 1 and 5
+        If rows is None, then use all of them
         """
         func = lambda i: special_round(5.0 * i / self.max)
         def process(mat):
@@ -136,9 +137,10 @@ class Matrix(object):
         """
         Build a new matrix composed of the rows in row_nums
         """
-        row_nums = set(row_nums)
+        row_nums = sorted(row_nums)
         row_lookup = dict((v,n) for n,v in enumerate(row_nums))
-        rows = [row for n,row in enumerate(self.rows) if n in row_nums]
+        rows = [self.rows[n] for n in row_nums]
+
         height = len(rows)
         cols = self.cols
         width = self.width
