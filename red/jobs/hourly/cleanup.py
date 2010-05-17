@@ -1,5 +1,5 @@
 from django_extensions.management.jobs import HourlyJob
-from ide.red.models import MatrixSet
+from red.models import MatrixSet
 import datetime
 
 hour = datetime.timedelta(hours=1)
